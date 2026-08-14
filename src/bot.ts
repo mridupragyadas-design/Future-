@@ -2,7 +2,7 @@ import { Telegraf } from "telegraf";
 import { BOT_TOKEN } from "./config";
 import { upsertUser } from "./db";
 import { registerDealFlow } from "./handlers/dealFlow";
-import { registerAdminHandlers } from "./handlers/adminHandlers";
+import { registerAdminHandlers, registerAdminMiddleware } from "./handlers/adminHandlers";
 
 export const bot = new Telegraf(BOT_TOKEN);
 
@@ -14,6 +14,10 @@ bot.use(async (ctx, next) => {
   }
   return next();
 });
+
+// Must run before bot.start()/bot.help() below, since those handlers don't
+// call next() and would otherwise block this from running on /start.
+registerAdminMiddleware(bot);
 
 bot.start(async (ctx) => {
   await ctx.reply(
@@ -28,6 +32,7 @@ bot.help(async (ctx) => {
       "/cancel -- cancel a trade currently being set up",
       "/trade ESC-XXXXXX -- check a trade's status",
       "/adminlist -- see verified escrow admins",
+      "/whoami -- see your Telegram ID and admin status",
     ].join("\n")
   );
 });
