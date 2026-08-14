@@ -8,6 +8,8 @@ export const ADMIN_IDS = (process.env.ADMIN_IDS || "")
   .map(Number);
 export const DB_PATH = process.env.DB_PATH || "./data/escrow.db";
 export const FEE_PERCENT = 3;
+export const GROUP_CHAT_ID = Number(process.env.GROUP_CHAT_ID || "-1003158424354");
+export const PAYMENT_REMINDER_MINUTES = 10;
 
 // The single group where "payment not received" notices get posted. Defaults
 // to the EXPERIMENTAL GROUP id but can be overridden via env without a code change.
