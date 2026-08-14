@@ -1,0 +1,25 @@
+{
+  "name": "mrixdu-escrow-bot",
+  "version": "1.0.0",
+  "description": "Telegram escrow bot for INR and crypto trades",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn src/index.ts"
+  },
+  "dependencies": {
+    "telegraf": "^4.16.3",
+    "better-sqlite3": "^11.3.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.3",
+    "ts-node-dev": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
