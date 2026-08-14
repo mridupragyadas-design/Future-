@@ -33,9 +33,10 @@ export function registerDealFlow(bot: Telegraf) {
     await ctx.reply(welcomeFormTemplate());
 
     const state: WizardState = {
-      step: "AWAIT_OTHER_PARTY",
-      initiatorId: userId,
-      initiatorUsername: ctx.from.username || `id${userId}`,
+  step: "AWAIT_OTHER_PARTY",
+  initiatorId: userId,
+  initiatorUsername: ctx.from.username || `id${userId}`,
+  chatId: ctx.chat.id,
     };
     setWizardState(userId, state);
 
