@@ -1,10 +1,11 @@
 services:
-  - type: worker
+  - type: web
     name: mrixdu-escrow-bot
     env: node
     plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
+    healthCheckPath: /
     envVars:
       - key: BOT_TOKEN
         sync: false
