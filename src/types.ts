@@ -47,6 +47,7 @@ export interface WizardState {
   step: WizardStep;
   initiatorId: number;
   initiatorUsername: string;
+  chatId: number;   // <-- new
   otherPartyUsername?: string;
   otherPartyId?: number | null;
   initiatorRole?: "buyer" | "seller";
