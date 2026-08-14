@@ -53,7 +53,6 @@ export function registerDealFlow(bot: Telegraf) {
     switch (state.step) {
       case "AWAIT_OTHER_PARTY": {
         const otherUsername = resolveUsername(text, ctx);
-
         if (!/^[a-zA-Z0-9_]{5,32}$/.test(otherUsername)) {
           await ctx.reply(
             "That doesn't look like a Telegram username. Send it like @username (5-32 letters, numbers, or underscores), or type 'me' if you're the other party."
@@ -71,19 +70,6 @@ export function registerDealFlow(bot: Telegraf) {
           );
           return;
         }
-        state.otherPartyUsername = otherUsername;
-        state.otherPartyId = otherId;
-        state.step = "AWAIT_ROLE";
-        setWizardState(userId, state);
-        await ctx.reply(
-          "Are you the buyer or the seller in this deal?",
-          Markup.inlineKeyboard([
-            Markup.button.callback("I'm the Buyer", "role_buyer"),
-            Markup.button.callback("I'm the Seller", "role_seller"),
-          ])
-        );
-        return;
-      }
         state.otherPartyUsername = otherUsername;
         state.otherPartyId = otherId;
         state.step = "AWAIT_ROLE";
@@ -319,4 +305,4 @@ function computeEscrowUntil(duration: string): string {
     minute: "2-digit",
     hour12: true,
   });
-}
+        }
