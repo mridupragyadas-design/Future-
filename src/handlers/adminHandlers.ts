@@ -3,25 +3,25 @@ import { ADMIN_IDS } from "../config";
 import { ensureAdminRow, getTrade, isAdminId, listAdmins, setAdminCrypto, setAdminQr, updateTradeStatus } from "../db";
 import { tradeStatusTemplate } from "../templates";
 
-export function registerAdminHandlers(bot: Telegraf) {
-  // Auto-register configured admins the first time they message the bot.
+// Registers the admin-auto-registration middleware. Must be added to the bot
+// BEFORE bot.start()/bot.help() are registered in bot.ts -- otherwise /start
+// gets intercepted first and never reaches this check.
+export function registerAdminMiddleware(bot: Telegraf) {
   bot.use(async (ctx, next) => {
     if (ctx.from && isAdminId(ctx.from.id, ADMIN_IDS)) {
       ensureAdminRow(ctx.from.id, ctx.from.username);
     }
     return next();
   });
+}
 
-  bot.command("adminlist", async (ctx) => {
-    const admins = listAdmins().filter((a) => ADMIN_IDS.includes(a.telegramId));
-    if (admins.length === 0) {
-      await ctx.reply("No admins have registered with the bot yet.");
-      return;
-    }
-    const lines = admins.map((a) => {
-      const flags = [a.cryptoAddress ? "crypto ✅" : "crypto ❌", a.qrFileId ? "INR QR ✅" : "INR QR ❌"];
-      return `@${a.username || a.telegramId} -- ${flags.join(", ")}`;
-    });
+export function registerAdminHandlers(bot: Telegraf) {
+  bot.command("whoami", async (ctx) => {
+    const isAdmin = isAdminId(ctx.from.id, ADMIN_IDS);
+    await ctx.reply(
+      `Your Telegram numeric ID: ${ctx.from.id}\nUsername: ${ctx.from.username ? "@" + ctx.from.username : "(none set)"}\nAdmin status: ${isAdmin ? "✅ configured as admin" : "❌ not in ADMIN_IDS"}`
+    );
+  });
     await ctx.reply(
       `🔐 Verified escrow admins:\n\n${lines.join("\n")}\n\n⚠️ Admins will NEVER DM you first for payment. Only pay an admin you selected from this bot's own trade flow.`
     );
