@@ -22,6 +22,17 @@ export function registerAdminHandlers(bot: Telegraf) {
       `Your Telegram numeric ID: ${ctx.from.id}\nUsername: ${ctx.from.username ? "@" + ctx.from.username : "(none set)"}\nAdmin status: ${isAdmin ? "✅ configured as admin" : "❌ not in ADMIN_IDS"}`
     );
   });
+
+  bot.command("adminlist", async (ctx) => {
+    const admins = listAdmins().filter((a) => ADMIN_IDS.includes(a.telegramId));
+    if (admins.length === 0) {
+      await ctx.reply("No admins have registered with the bot yet.");
+      return;
+    }
+    const lines = admins.map((a) => {
+      const flags = [a.cryptoAddress ? "crypto ✅" : "crypto ❌", a.qrFileId ? "INR QR ✅" : "INR QR ❌"];
+      return `@${a.username || a.telegramId} -- ${flags.join(", ")}`;
+    });
     await ctx.reply(
       `🔐 Verified escrow admins:\n\n${lines.join("\n")}\n\n⚠️ Admins will NEVER DM you first for payment. Only pay an admin you selected from this bot's own trade flow.`
     );
